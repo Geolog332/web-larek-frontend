@@ -1,19 +1,13 @@
 
 export interface ICard {
     id: string;
-    description: string;
-    image: string;
     title: string;
     category: string;
-    price: number|null;
+    description: string;
+    image: string;
+    price: number | null;
+    selected: boolean;
 }
-
-export type TCardCategory =
-	| 'софт-скил'
-	| 'другое'
-	| 'дополнительное'
-	| 'кнопка'
-	| 'хард-скил';
 
 export interface IPage {
     counter: number;
@@ -21,33 +15,29 @@ export interface IPage {
     locked: boolean;
 }
 
-export interface IModal{
+export interface IModal {
     content: HTMLElement;
-} 
-
-interface IBasket{
-	items: HTMLElement[]; 
-	total: number;
-	selected: string[];
 }
 
-export interface IOrder {
-    payment:string;
-    total:number;
-    address:string;
-    phone:string;
-    email:string;
-    items:string[];
+export interface IBasket {
+    items: HTMLElement[];
+    total: number;
+    list: HTMLElement[];
 }
 
 export interface IAddressForm {
-    payment:string;
-    address:string;
+    payment: string;
+    address: string;
 }
 
-export interface IContacntForm {
-    email:string;
-    phone:string;
+export interface IContactsForm {
+    email: string;
+    phone: string;
+}
+
+export interface IOrder extends IAddressForm, IContactsForm {
+    items: string[];
+    total: number;
 }
 
 export interface IOrderSuccess {
@@ -55,3 +45,15 @@ export interface IOrderSuccess {
     total: number;
 }
 
+
+
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+export type TSuccess = Pick<IOrderSuccess, 'total'>;
+
+export type TCardCategory =
+    | 'софт-скил'
+    | 'другое'
+    | 'дополнительное'
+    | 'кнопка'
+    | 'хард-скил';

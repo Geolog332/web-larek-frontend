@@ -16,15 +16,15 @@ export abstract class Component<T> {
         }
     }
 
-        // Установить изображение с алтернативным текстом
-        protected setImage(element: HTMLImageElement, src: string, alt?: string) {
-            if (element) {
-                element.src = src;
-                if (alt) {
-                    element.alt = alt;
-                }
+    // Установить изображение с алтернативным текстом
+    protected setImage(element: HTMLImageElement, src: string, alt?: string) {
+        if (element) {
+            element.src = src;
+            if (alt) {
+                element.alt = alt;
             }
         }
+    }
 
     // Сменить статус блокировки
     setDisabled(element: HTMLElement, state: boolean) {

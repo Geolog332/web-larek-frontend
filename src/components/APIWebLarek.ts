@@ -2,9 +2,9 @@ import { Api, ApiListResponse } from './base/api';
 import { ICard, IOrder, IOrderSuccess } from '../types/index';
 
 interface IAPIWebLarek {
-	getCards: () => Promise<ICard[]>;						// Метод для получения списка продуктов
-	getCardsId: (id: string) => Promise<ICard>;				// Метод для получения информации о продукте по его ID
-	getOrder: (order: IOrder) => Promise<IOrderSuccess>;  	// Метод для оформления заказа 
+	getCards: () => Promise<ICard[]>;						
+	getCardsId: (id: string) => Promise<ICard>;				
+	getOrder: (order: IOrder) => Promise<IOrderSuccess>;  
 }
 
 export class APIWebLarek extends Api implements IAPIWebLarek {
