@@ -1,6 +1,6 @@
 
-import { ICard, TCardCategory } from '../types';       
-import { ensureElement } from '../utils/utils';     
+import { ICard, TCardCategory } from '../types';
+import { ensureElement } from '../utils/utils';
 import { Component } from './base/component';
 
 
@@ -8,7 +8,7 @@ import { Component } from './base/component';
 
 // Интерфейс для поведения карточки
 export interface ICardActions {
-	onClick: (event: MouseEvent) => void;                           
+	onClick: (event: MouseEvent) => void;
 }
 
 
@@ -23,30 +23,20 @@ export abstract class Card extends Component<ICard> {
 	protected _description?: HTMLElement;
 	protected _category?: HTMLElement;
 	protected _button?: HTMLButtonElement;
-
-	CategoryCard: { [key: string]: string } = {
-		'софт-скил': 'card__category_soft',
-		другое: 'card__category_other',
-		'хард-скил': 'card__category_hard',
-		дополнительное: 'card__category_additional',
-		кнопка: 'card__category_button',
-	};
+	protected _colors = <Record<string, string>>{
+		"дополнительное": "additional",
+		"софт-скил": "soft",
+		"кнопка": "button",
+		"хард-скил": "hard",
+		"другое": "other",
+	}
 
 	constructor(protected container: HTMLElement, actions?: ICardActions) {
 		super(container);
 
 		this._title = ensureElement<HTMLElement>('.card__title', container);
 		this._price = ensureElement<HTMLElement>(`.card__price`, container);
-		this._image = ensureElement<HTMLImageElement>('.card__image', container);
 		this._category = ensureElement<HTMLElement>('.card__category', container);
-		if (actions?.onClick) {
-			if (this._button) {
-				this._button.addEventListener('click', actions.onClick);
-			} else {
-				container.addEventListener('click', actions.onClick);
-			}
-		}
-
 	}
 
 	// Установка идентификатора товара
@@ -64,10 +54,10 @@ export abstract class Card extends Component<ICard> {
 		this.setImage(this._image, value, this.title);
 	}
 
-	// Установка категории товара
+	// // Установка категории товара
 	set category(value: TCardCategory) {
 		this._category.textContent = value;
-		this._category.classList.add(this.CategoryCard[value]);
+		this._category.className = `card__category card__category_${this._colors[value]}`
 	}
 
 	// Устанавливает условие выбрали товар или нет.
@@ -90,6 +80,8 @@ export abstract class Card extends Component<ICard> {
 	set description(value: string) {
 		this.setText(this._description, value);
 	}
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +92,21 @@ export abstract class Card extends Component<ICard> {
 export class CardCatalog extends Card {
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
+		
+		this._image = ensureElement<HTMLImageElement>('.card__image', container);
+		if (actions?.onClick) {
+			if (this._button) {
+				this._button.addEventListener('click', actions.onClick);
+			}
+			else {
+				container.addEventListener('click', actions.onClick);
+			}
+		}
+	}
+
+	// Установка изображения товара
+	set image(value: string) {
+		this.setImage(this._image, value, this.title);
 	}
 }
 
@@ -117,10 +124,15 @@ export class CardPreview extends Card {
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
 
+
+		this._image = ensureElement<HTMLImageElement>('.card__image', container);
 		this._description = ensureElement<HTMLButtonElement>('.card__text', container);
 		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
+		if (this._button) {
+			this._button.addEventListener('click', actions.onClick);
+		}
 	}
-	
+
 
 }
 

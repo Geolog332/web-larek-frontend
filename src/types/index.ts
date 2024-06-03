@@ -2,7 +2,7 @@
 export interface ICard {
     id: string;
     title: string;
-    category: string;
+    category: TCardCategory;
     description: string;
     image: string;
     price: number | null;
@@ -54,6 +54,6 @@ export type TSuccess = Pick<IOrderSuccess, 'total'>;
 export type TCardCategory =
     | 'софт-скил'
     | 'другое'
+    | 'хард-скил'
     | 'дополнительное'
-    | 'кнопка'
-    | 'хард-скил';
+    | 'кнопка';

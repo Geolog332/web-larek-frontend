@@ -1,18 +1,18 @@
-import { Component } from './base/component';  
-import { IEvents } from './base/events';  
-import { ensureElement } from '../utils/utils';  
-import { IAddressForm, IContactsForm } from '../types/index';  
+import { Component } from './base/component';
+import { IEvents } from './base/events';
+import { ensureElement } from '../utils/utils';
+import { IAddressForm, IContactsForm } from '../types/index';
 
- 
+
 interface IFormCondition {
-	valid: boolean;  
-	errors: string[];  
+	valid: boolean;
+	errors: string[];
 }
 
 
 export abstract class Form<T> extends Component<IFormCondition> {
-	protected _submit: HTMLButtonElement;  
-	protected _errors: HTMLElement;  
+	protected _submit: HTMLButtonElement;
+	protected _errors: HTMLElement;
 
 	constructor(protected container: HTMLFormElement, protected events: IEvents) {
 		super(container);
@@ -71,26 +71,37 @@ export abstract class Form<T> extends Component<IFormCondition> {
 // Класс формы для адреса
 
 export class AddressForm extends Form<IAddressForm> {
+	
+	protected _card: HTMLButtonElement;
+	protected _cash: HTMLButtonElement;
 
-	protected _buttonPayments: HTMLButtonElement[];  
-
+	// Конструктор принимает родительский элемент и обработчик событий
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
 
-		this._buttonPayments = Array.from(container.querySelectorAll('.button_alt'));
+		this._card = container.elements.namedItem('card') as HTMLButtonElement;
+		this._cash = container.elements.namedItem('cash') as HTMLButtonElement;
 
-		// Обработчики для кнопок выбора оплаты
-		this._buttonPayments.forEach((button) => {
-			button.addEventListener('click', (e: Event) => {
-				this._buttonPayments.forEach((button) => {
-					if (button === e.target) return;
-					button.classList.remove('button_alt-active');
-				});
-				events.emit('buttonPayments:select', {
-					button: e.target as HTMLButtonElement,
-				});
-			});
-		});
+		if (this._cash) {
+			this._cash.addEventListener('click', () => {
+				this._cash.classList.add('button_alt-active')
+				this._card.classList.remove('button_alt-active')
+				this.onInputChange('payment', 'cash')
+			})
+		}
+		if (this._card) {
+			this._card.addEventListener('click', () => {
+				this._card.classList.add('button_alt-active')
+				this._cash.classList.remove('button_alt-active')
+				this.onInputChange('payment', 'card')
+			})
+		}
+	}
+
+	// Метод, отключающий подсвечивание кнопок
+	disableButtons() {
+		this._cash.classList.remove('button_alt-active')
+		this._card.classList.remove('button_alt-active')
 	}
 
 	// Установка значения адреса
@@ -98,6 +109,8 @@ export class AddressForm extends Form<IAddressForm> {
 		(this.container.elements.namedItem('address') as HTMLInputElement).value =
 			value;
 	}
+
+
 }
 
 

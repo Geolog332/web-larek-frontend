@@ -202,6 +202,7 @@ events.on('contacts:submit', () => {
 			events.emit('order:success', res);
 			appData.clearBasket();
 			appData.resetForm();
+			addressForm.disableButtons();
 			page.counter = 0;
 			appData.resetSelected();
 		})
